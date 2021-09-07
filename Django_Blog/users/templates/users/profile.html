@@ -11,6 +11,16 @@
         <p class="text-secondary">{{ user.email }}</p>
       </div> 
     </div>
-    <!-- FORM HERE -->
+    <form method="POST" enctype="multipart/form-data">    <!--enctype is important as it handles image related fields with the data inside our forms-->
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Profile info</legend>
+        {{ p_form | crispy }} 
+        {{ u_form | crispy }}   <!-- | acts as a filter-->
+      </fieldset>
+      <div class="form-group">
+        <button class="btn btn-outline-info" type="submit">Update</button>
+      </div>
+    </form>
   </div>
 {% endblock content %}
