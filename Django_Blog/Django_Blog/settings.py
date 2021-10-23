@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+# app link -->>>  https://blog-tech-wonders.herokuapp.com/
 
 from pathlib import Path
 import os
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!7fz2uon&lrssn+n*(vamt$k-01erwlw+kfnr5$x2&ihm7byi5'
+SECRET_KEY =os.environ.get('Secret_key','local')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []#['blog-tech-wonders.herokuapp.com', 'localhost', '127.0.0.1'] 
 
 
 # Application definition
@@ -35,7 +37,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
-
+    # 'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,12 +81,23 @@ WSGI_APPLICATION = 'Django_Blog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd6nmht6kr6akda',
+#         'HOST': 'ec2-18-235-45-217.compute-1.amazonaws.com',
+#         'PORT': 5432,
+#         'USER': 'zyxlpjlnxqhdye',
+#         'PASSWORD':'f54d43a49c0e8ae7d1fcdbd057541cdaf79dae3146a5d94d5bdb9c64a977fb23'
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME':  BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation
@@ -124,9 +138,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL='/media/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media')
 
-MEDIA_URL="/media/"
 
 
 # Default primary key field type
@@ -147,3 +165,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True #(not ssl)
 EMAIL_HOST_USER = os.environ.get('Email_user')
 EMAIL_HOST_PASSWORD = os.environ.get('Email_pass')
+
+
+django_heroku.settings(locals())
